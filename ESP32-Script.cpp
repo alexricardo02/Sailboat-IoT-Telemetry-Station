@@ -1,16 +1,16 @@
 #include <Wire.h>
 #include "Adafruit_HTU21DF.h"
 
-// Pines I2C estándar del ESP32
+// Standard ESP32 I2C pins
 #define I2C_SDA 21
 #define I2C_SCL 22
 
-// Pin del sensor de sentina (debe ser RTC GPIO, ej. 33)
-#define PIN_SENTINA GPIO_NUM_33
+// Bilge sensor pin (must be an RTC GPIO, e.g., GPIO 33)
+#define BILGE_PIN GPIO_NUM_33
 
-// Tiempo de sueño para la prueba: 30 segundos (en producción serán horas)
-#define TIEMPO_SUENO_SEGUNDOS  30
-#define FACTOR_CONVERSION_US   1000000ULL
+// Sleep time for testing: 30 seconds (hours in production)
+#define SLEEP_TIME_SECONDS    30
+#define US_CONVERSION_FACTOR  1000000ULL
 
 Adafruit_HTU21DF htu = Adafruit_HTU21DF();
 
@@ -18,13 +18,13 @@ void print_wakeup_reason() {
   esp_sleep_wakeup_cause_t wakeup_reason = esp_sleep_get_wakeup_cause();
   switch(wakeup_reason) {
     case ESP_SLEEP_WAKEUP_TIMER:
-      Serial.println("[WAKEUP] Despertado por temporizador programado.");
+      Serial.println("[WAKEUP] Woken up by scheduled timer.");
       break;
     case ESP_SLEEP_WAKEUP_EXT0:
-      Serial.println("[ALERTA CRÍTICA] ¡Despertado por el flotador de sentina! Agua detectada.");
+      Serial.println("[CRITICAL ALERT] Woken up by bilge float switch! Water detected.");
       break;
     default:
-      Serial.printf("[WAKEUP] Inicio normal / Reset. Causa: %d\n", wakeup_reason);
+      Serial.printf("[WAKEUP] Normal boot / Reset. Cause: %d\n", wakeup_reason);
       break;
   }
 }
@@ -32,45 +32,45 @@ void print_wakeup_reason() {
 void setup() {
   Serial.begin(115200);
   delay(1000);
-  Serial.println("\n--- Telemetría Velero Iniciando ---");
+  Serial.println("\n--- Sailboat Telemetry Starting ---");
 
-  // Mostrar la razón por la que se despertó
+  // Display the wake-up reason
   print_wakeup_reason();
 
-  // Configurar pin de sentina con resistencia interna pull-up
-  pinMode(PIN_SENTINA, INPUT_PULLUP);
+  // Configure bilge pin with internal pull-up resistor
+  pinMode(BILGE_PIN, INPUT_PULLUP);
 
-  // Inicializar bus I2C y sensor HTU21D
+  // Initialize I2C bus and HTU21D sensor
   Wire.begin(I2C_SDA, I2C_SCL);
   if (!htu.begin()) {
-    Serial.println("[ERROR] No se encontró el sensor HTU21D. Revisá conexiones SDA/SCL.");
+    Serial.println("[ERROR] HTU21D sensor not found. Check SDA/SCL connections.");
   } else {
     float temp = htu.readTemperature();
     float hum = htu.readHumidity();
-    Serial.printf("[SENSOR] Temperatura: %.2f °C | Humedad: %.2f %%\n", temp, hum);
+    Serial.printf("[SENSOR] Temperature: %.2f °C | Humidity: %.2f %%\n", temp, hum);
   }
 
-  // Leer estado de la sentina (LOW = flotador cerrado / agua alta)
-  int estadoSentina = digitalRead(PIN_SENTINA);
-  if (estadoSentina == LOW) {
-    Serial.println("[SENTINA] ESTADO: ALERTA DE AGUA (Circuito Cerrado)");
+  // Read bilge status (LOW = switch closed / water level high)
+  int bilgeState = digitalRead(BILGE_PIN);
+  if (bilgeState == LOW) {
+    Serial.println("[BILGE] STATUS: WATER ALERT (Closed Circuit)");
   } else {
-    Serial.println("[SENTINA] ESTADO: Seco (Normal)");
+    Serial.println("[BILGE] STATUS: Dry (Normal)");
   }
 
-  Serial.println("[SISTEMA] Tareas completadas. Preparando Deep Sleep...");
+  Serial.println("[SYSTEM] Tasks completed. Preparing Deep Sleep...");
 
-  // Configurar despertar por tiempo (ej. 30 segundos)
-  esp_sleep_enable_timer_wakeup(TIEMPO_SUENO_SEGUNDOS * FACTOR_CONVERSION_US);
+  // Configure timer wake-up (e.g., 30 seconds)
+  esp_sleep_enable_timer_wakeup(SLEEP_TIME_SECONDS * US_CONVERSION_FACTOR);
 
-  // Configurar despertar por flotador (EXT0 despierta si el pin pasa a LOW/0V)
-  esp_sleep_enable_ext0_wakeup(PIN_SENTINA, 0);
+  // Configure float switch wake-up (EXT0 wakes up when the pin goes LOW/0V)
+  esp_sleep_enable_ext0_wakeup(BILGE_PIN, 0);
 
-  Serial.println("[SISTEMA] Entrando en Deep Sleep ahora.");
+  Serial.println("[SYSTEM] Entering Deep Sleep now.");
   Serial.flush();
   esp_deep_sleep_start();
 }
 
 void loop() {
-  // En Deep Sleep nunca se llega al loop()
+  // In Deep Sleep, loop() is never reached
 }
