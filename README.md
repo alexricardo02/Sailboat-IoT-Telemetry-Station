@@ -14,7 +14,6 @@ deep sleep, waking on a timer or immediately on a bilge water alert.
 ## Table of Contents
 
 1. [Features](#features)
-2. [Repository Structure](#repository-structure)
 3. [Hardware Components](#hardware-components)
 4. [Component Selection Rationale](#component-selection-rationale)
 5. [Power Architecture](#power-architecture)
@@ -42,23 +41,6 @@ deep sleep, waking on a timer or immediately on a bilge water alert.
 
 ---
 
-## Repository Structure
-
-```
-/firmware           -> Arduino/ESP32 sketches (.ino / .cpp)
-/docs
-  /images            -> Component photos, build photos, wiring diagrams
-  /datasheets         -> PDF datasheets for each component
-/logs                -> Serial monitor logs from bench testing
-/enclosure           -> CAD/blueprint files (OpenSCAD, wood cutting plans)
-README.md
-LICENSE
-```
-
-*(Adjust this structure to match how you actually organize the repo before pushing.)*
-
----
-
 ## Hardware Components
 
 | Component | Role | Datasheet | Photo |
@@ -70,9 +52,9 @@ LICENSE
 | TP4056 | Li-ion charging module | *add link* | <img src="images/Tp4056.webp" width="100" alt="TP4056"> |
 | XL6009 | Adjustable DC-DC step-up (boost) | *add link* | <img src="images/StepUp.webp" width="100" alt="XL6009"> |
 | LM2596 | Adjustable DC-DC step-down (buck) | *add link* | <img src="images/Step-down.webp" width="100" alt="LM2596"> |
-| 18650 Li-ion cell | Main power source | *add link* | |
+| 18650 Li-ion cell | Main power source | *add link* | <img src="images/18650.png" width="100" alt="18650"> |
 | 1000µF 25V electrolytic capacitor | Absorbs SIM800L current spikes | *add link* | <img src="images/Capacitor.webp" width="100" alt="Capacitor"> |
-| 10kΩ / 20kΩ resistors | UART voltage divider + pull-up | *add link* | |
+| 10kΩ / 20kΩ resistors | UART voltage divider + pull-up | *add link* | <img src="images/10k.webp" width="100" alt="10K"> |
 
 ---
 
@@ -148,8 +130,7 @@ system's mostly-sleeping duty cycle.
 
 ## Firmware
 
-Current test sketch: [`firmware/telemetry_test.ino`](firmware/telemetry_test.ino)
-*(rename/move the provided .cpp file into this path when you push to the repo).*
+Current test sketch: [`ESP32-Script.cpp`](/ESP32-Script.cpp)
 
 What it currently does:
 - Prints the deep sleep wake-up reason (timer vs. external interrupt) over serial
