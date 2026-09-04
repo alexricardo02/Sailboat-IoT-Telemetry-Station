@@ -6,18 +6,18 @@ temperature, humidity, and bilge water level, and reports the readings over a
 for weeks on a single 18650 Li-ion cell by spending nearly all of its time in
 deep sleep, waking on a timer or immediately on a bilge water alert.
 
-![Build photo placeholder](docs/images/build-overview.jpg)
-*Add a photo of the current build here.*
+![Build photo placeholder](/images/build-overview.jpeg)
 
 ---
 
 ## Table of Contents
 
 1. [Features](#features)
-3. [Hardware Components](#hardware-components)
-4. [Component Selection Rationale](#component-selection-rationale)
-5. [Power Architecture](#power-architecture)
-6. [Pin Mapping](#pin-mapping)
+2. [Hardware Components](#hardware-components)
+3. [Component Selection Rationale](#component-selection-rationale)
+4. [Power Architecture](#power-architecture)
+5. [Pin Mapping](#pin-mapping)
+6. [Enclosure & Mechanical Design](#enclosure--mechanical-design)
 7. [Firmware](#firmware)
 8. [Development Environment Setup](#development-environment-setup)
 9. [Progress Log](#progress-log)
@@ -149,6 +149,33 @@ Not yet implemented in firmware:
 
 ---
 
+## Enclosure & Mechanical Design
+
+The unit is housed in a custom enclosure constructed from 9mm marine-grade plywood (150 mm × 100 mm × 60 mm external dimensions). To maximize moisture protection, avoid component crowding, and keep high-drain cells isolated from logic boards, the interior uses a **split-level two-tier architecture**:
+
+- **Lower Tier (Power Bay):** Dedicated to the 18650 battery holder and main incoming power runs.
+- **Upper Tier (Electronics Bay):** Supported by wooden side rails and a removable partition plate holding the ESP32, DC-DC converter modules, and sensor interface wiring.
+- **Sealing & Pass-throughs:**
+  - **Front Panel:** Ø12.5 mm hole fitted with an IP68 cable gland for the bilge float switch cable.
+  - **Back Panel:** Ø12.5 mm hole (plugged/reserved for auxiliary external sensors).
+  - **Left Panel:** 10 mm × 6 mm cutout providing direct access to the TP4056 Micro-USB charging port without opening the box.
+  - **Right Panel:** Ø4 mm hole for the SIM800L external antenna feed.
+  - **Removable Lid:** Fastened with four corner screws (Ø4 mm) and sealed with a perimeter rubber gasket against salt spray.
+
+### Cutting Plan & Panel Specifications
+
+![Enclosure Cutting Plan](/images/enclosure-blueprint.png)
+*Panel cutting dimensions, screw patterns, and pass-through positions for 9mm plywood.*
+
+### Fabrication & Internal Tier Layout
+
+| Lower Tier: Battery Bay | Upper Tier: Electronics Tray |
+| :---: | :---: |
+| ![Lower Tier](/images/box-tier-batteries.jpeg) | ![Upper Tier](/images/box-tier-electronics.jpeg) |
+| *Battery compartment under the divider plate.* | *Removable tray mounting the ESP32 and power circuitry.* |
+
+---
+
 ## Development Environment Setup
 
 1. **Arduino IDE** — [Download](https://www.arduino.cc/en/software/)
@@ -177,6 +204,7 @@ Not yet implemented in firmware:
       "dry" and "water alert" states
 - [x] HTU21D header pins (VIN, GND, DA, CL) soldered
 - [x] SIM800L coiled antenna soldered to the NET pad
+- [x] Enclosure fabrication: 9mm plywood panels cut, side rails installed, and two-tier divider dry-fitted[cite: 3]
 - [ ] HTU21D not yet reading correctly — see Known Issues
 - [ ] SIM800L AT command / data transmission firmware — not started
 - [ ] Final component purchases (battery, holder, resistors, jumper wires, SIM card)
@@ -184,49 +212,3 @@ Not yet implemented in firmware:
 - [ ] Full system integration test
 
 See [`/logs`](logs) for raw serial monitor captures from bench testing.
-
----
-
-## Known Issues
-
-### HTU21D not detected (unresolved)
-
-Every serial log captured so far — across both timer wake-ups and float
-switch alert wake-ups — shows:
-
-```
-[ERROR] No se detecto el sensor HTU21D. Revisa SDA y SCL.
-```
-
-The sensor has never successfully initialized in any test run. Things to
-check next:
-- Confirm SDA/SCL aren't swapped at the header pins (easy to mix up when
-  hand-soldering a 4-pin strip)
-- Re-check the solder joints on the HTU21D header with a magnifier / continuity
-  test — a cold joint on VIN or GND would cause exactly this symptom
-  intermittently or permanently
-- Confirm the sensor is getting 3.3V at its VIN pin with a multimeter while
-  the ESP32 is awake
-- Try an I2C scanner sketch (independent of the HTU21D library) to confirm
-  whether the device shows up at its expected address (0x40) on the bus at all
-- Double check no other device on the bus is conflicting (shouldn't be an
-  issue yet, since HTU21D is currently the only I2C device)
-
----
-
-## Roadmap
-
-- [ ] Debug and resolve HTU21D detection issue
-- [ ] Purchase remaining components: 18650 cell (Samsung/LG/Panasonic,
-      2600-3500mAh), battery holder, 10kΩ/20kΩ resistors, jumper wires,
-      prepaid 2G/GPRS SIM card
-- [ ] Calibrate XL6009 (6.0V) and LM2596 (4.0V) with a multimeter before
-      connecting any load
-- [ ] Implement SIM800L AT command routine and data upload (HTTP POST or
-      similar) in firmware
-- [ ] Switch sleep interval from 30s test value to production schedule
-      (wake 3x/day)
-- [ ] Full integration test: sensors + cellular transmission + deep sleep
-      cycle, end to end
-- [ ] Build and seal the enclosure (see `/enclosure`)
-- [ ] Install and field-test aboard the boat
