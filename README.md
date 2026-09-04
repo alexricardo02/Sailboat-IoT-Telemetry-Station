@@ -63,21 +63,16 @@ LICENSE
 
 | Component | Role | Datasheet | Photo |
 |---|---|---|---|
-| ESP32 NodeMCU-32S (38-pin, CP2102) | Main controller | *add link* | *add photo* |
-| HTU21D | Temperature & humidity sensor (I2C) | *add link* | *add photo* |
-| SIM800L | 2G/GPRS cellular module | *add link* | *add photo* |
-| Float switch 6017-1P (dry contact) | Bilge water level sensor | *add link* | *add photo* |
-| TP4056 | Li-ion charging module | *add link* | *add photo* |
-| XL6009 | Adjustable DC-DC step-up (boost) | *add link* | *add photo* |
-| LM2596 | Adjustable DC-DC step-down (buck) | *add link* | *add photo* |
-| 18650 Li-ion cell | Main power source | *add link* | *add photo* |
-| 1000µF 25V electrolytic capacitor | Absorbs SIM800L current spikes | *add link* | *add photo* |
-| 10kΩ / 20kΩ resistors | UART voltage divider + pull-up | *add link* | *add photo* |
-
-> Replace each "*add link/photo*" with the actual product page, datasheet PDF,
-> and a photo of your physical unit once assembled. Keeping this table
-> up to date makes the repo far more useful to anyone (including future you)
-> trying to reproduce the build.
+| ESP32 NodeMCU-32S (38-pin, CP2102) | Main controller | *add link* | <img src="images/NodemcuEsp32.webp" width="100" alt="ESP32"> |
+| HTU21D | Temperature & humidity sensor (I2C) | *add link* | <img src="images/Htu21d.webp" width="100" alt="HTU21D"> |
+| SIM800L | 2G/GPRS cellular module | *add link* | <img src="images/Sim800l .webp" width="100" alt="SIM800L"> |
+| Float switch 6017-1P (dry contact) | Bilge water level sensor | *add link* | <img src="images/Switch.webp" width="100" alt="Float Switch"> |
+| TP4056 | Li-ion charging module | *add link* | <img src="images/Tp4056.webp" width="100" alt="TP4056"> |
+| XL6009 | Adjustable DC-DC step-up (boost) | *add link* | <img src="images/StepUp.webp" width="100" alt="XL6009"> |
+| LM2596 | Adjustable DC-DC step-down (buck) | *add link* | <img src="images/Step-down.webp" width="100" alt="LM2596"> |
+| 18650 Li-ion cell | Main power source | *add link* | |
+| 1000µF 25V electrolytic capacitor | Absorbs SIM800L current spikes | *add link* | <img src="images/Capacitor.webp" width="100" alt="Capacitor"> |
+| 10kΩ / 20kΩ resistors | UART voltage divider + pull-up | *add link* | |
 
 ---
 
@@ -254,10 +249,3 @@ check next:
       cycle, end to end
 - [ ] Build and seal the enclosure (see `/enclosure`)
 - [ ] Install and field-test aboard the boat
-
----
-
-## License
-
-*(Choose a license — e.g. MIT for a permissive open-source portfolio project —
-and add the corresponding `LICENSE` file to the repo root.)*
