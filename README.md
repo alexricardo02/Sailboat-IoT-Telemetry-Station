@@ -18,12 +18,13 @@ deep sleep, waking on a timer or immediately on a bilge water alert.
 4. [Power Architecture](#power-architecture)
 5. [Pin Mapping](#pin-mapping)
 6. [Enclosure & Mechanical Design](#enclosure--mechanical-design)
-7. [Firmware](#firmware)
-8. [Development Environment Setup](#development-environment-setup)
-9. [Progress Log](#progress-log)
-10. [Known Issues](#known-issues)
-11. [Roadmap](#roadmap)
-12. [License](#license)
+7. [Assembly Progress](#assembly-progress)
+8. [Firmware](#firmware)
+9. [Development Environment Setup](#development-environment-setup)
+10. [Progress Log](#progress-log)
+11. [Known Issues](#known-issues)
+12. [Roadmap](#roadmap)
+13. [License](#license)
 
 ---
 
@@ -102,6 +103,32 @@ system's mostly-sleeping duty cycle.
 
 ---
 
+## Power Architecture
+
+```
+18650 Li-ion cell (3.0V - 4.2V)
+        |
+        v
+   TP4056 (charge/protection, B+/B-)
+        |
+        v (OUT+/OUT-)
+   XL6009 step-up  --> trimmed to a fixed 6.0V
+        |
+        +---------------------------+
+        |                           |
+        v                           v
+  ESP32 VIN (6.0V,               LM2596 step-down --> trimmed to 4.0V
+  internal AMS1117                    |
+  regulates to 3.3V)                  v
+                              SIM800L VCC/GND
+                              (+ 1000uF cap in parallel
+                               at the module's pins)
+```
+
+All modules share a common ground.
+
+---
+
 ## Pin Mapping
 
 ### HTU21D (I2C)
@@ -128,6 +155,54 @@ system's mostly-sleeping duty cycle.
 
 ---
 
+## Enclosure & Mechanical Design
+
+The unit is housed in a custom enclosure constructed from 9mm marine-grade plywood (150 mm × 100 mm × 60 mm external dimensions). To maximize moisture protection, avoid component crowding, and keep the electronics serviceable without disturbing the wiring, the enclosure is built around a **removable component tray**:
+
+- **Removable Tray (Component Card):** A single rectangular board that slides into a slot running through the middle of the box. Every module — TP4056 charger, XL6009 boost, LM2596 buck, and the ESP32 — is glued directly to this tray in a fixed layout, with all inter-module wiring soldered on the tray itself. Because the whole assembly is on one card, the entire electronics stack can be slid out of the box as a single unit for inspection or repair, without unsoldering anything from the box itself.
+- **Sealing & Pass-throughs:**
+  - **Front Panel:** Ø12.5 mm hole fitted with an IP68 cable gland for the bilge float switch cable.
+  - **Back Panel:** Ø12.5 mm hole (plugged/reserved for auxiliary external sensors).
+  - **Left Panel:** 10 mm × 6 mm cutout providing direct access to the TP4056 Micro-USB charging port without opening the box.
+  - **Right Panel:** Ø4 mm hole for the SIM800L external antenna feed.
+  - **Removable Lid:** Fastened with four corner screws (Ø4 mm) and sealed with a perimeter rubber gasket against salt spray. The lid also has a dedicated **slot that exposes the ESP32's header pins**, so the external HTU21D temperature/humidity sensor can be wired and mounted outside the sealed box (where it can actually read ambient air) while its four wires (VIN, GND, SDA, SCL) pass through this slot to reach the tray inside.
+
+### Cutting Plan & Panel Specifications
+
+![Enclosure Cutting Plan](/images/enclosure-blueprint.png)
+*Panel cutting dimensions, screw patterns, and pass-through positions for 9mm plywood.*
+
+### Fabrication & Internal Tier Layout
+
+| Lower Tier: Battery Bay | Upper Tier: Electronics Tray |
+| :---: | :---: |
+| ![Lower Tier](/images/box-tier-batteries.jpeg) | ![Upper Tier](/images/box-tier-electronics.jpeg) |
+| *Battery compartment under the divider plate.* | *Removable tray mounting the ESP32 and power circuitry.* |
+
+---
+
+## Assembly Progress
+
+Step-by-step build of the removable component tray:
+
+| 1. Tray layout & mounting holes | 2. Power chain wired | 3. ESP32 mounted |
+| :---: | :---: | :---: |
+| ![Tray layout with drilled mounting holes](/images/tray-layout-holes.jpg) | ![TP4056 to XL6009 to LM2596 power chain soldered](/images/power-chain-wiring.jpg) | ![ESP32 glued onto the tray next to the power chain](/images/tray-with-esp32.jpg) |
+| *Mounting holes drilled and modules dry-fitted before gluing.* | *TP4056 charger wired into the XL6009 boost converter, which feeds the LM2596 buck converter above it.* | *ESP32 glued onto the tray alongside the completed charge/boost/buck chain.* |
+
+Soldered and glued onto the tray so far:
+- TP4056 charging module
+- XL6009 step-up (boost) converter
+- LM2596 step-down (buck) converter
+- ESP32 NodeMCU-32S
+
+Still to be soldered onto the tray: SIM800L module, HTU21D sensor wiring
+(routed out through the lid slot), bilge float switch wiring (routed out
+through the front panel cable gland), 1000µF capacitor at the SIM800L power
+pins, and the UART voltage divider resistors.
+
+---
+
 ## Firmware
 
 Current test sketch: [`ESP32-Script.cpp`](/ESP32-Script.cpp)
@@ -146,33 +221,6 @@ Not yet implemented in firmware:
 - Cellular data transmission / payload formatting
 - Production sleep interval (currently 30 seconds for bench testing, will be
   changed to match the 3x/day schedule)
-
----
-
-## Enclosure & Mechanical Design
-
-The unit is housed in a custom enclosure constructed from 9mm marine-grade plywood (150 mm × 100 mm × 60 mm external dimensions). To maximize moisture protection, avoid component crowding, and keep high-drain cells isolated from logic boards, the interior uses a **split-level two-tier architecture**:
-
-- **Lower Tier (Power Bay):** Dedicated to the 18650 battery holder and main incoming power runs.
-- **Upper Tier (Electronics Bay):** Supported by wooden side rails and a removable partition plate holding the ESP32, DC-DC converter modules, and sensor interface wiring.
-- **Sealing & Pass-throughs:**
-  - **Front Panel:** Ø12.5 mm hole fitted with an IP68 cable gland for the bilge float switch cable.
-  - **Back Panel:** Ø12.5 mm hole (plugged/reserved for auxiliary external sensors).
-  - **Left Panel:** 10 mm × 6 mm cutout providing direct access to the TP4056 Micro-USB charging port without opening the box.
-  - **Right Panel:** Ø4 mm hole for the SIM800L external antenna feed.
-  - **Removable Lid:** Fastened with four corner screws (Ø4 mm) and sealed with a perimeter rubber gasket against salt spray.
-
-### Cutting Plan & Panel Specifications
-
-![Enclosure Cutting Plan](/images/enclosure-blueprint.png)
-*Panel cutting dimensions, screw patterns, and pass-through positions for 9mm plywood.*
-
-### Fabrication & Internal Tier Layout
-
-| Lower Tier: Battery Bay | Upper Tier: Electronics Tray |
-| :---: | :---: |
-| ![Lower Tier](/images/box-tier-batteries.jpeg) | ![Upper Tier](/images/box-tier-electronics.jpeg) |
-| *Battery compartment under the divider plate.* | *Removable tray mounting the ESP32 and power circuitry.* |
 
 ---
 
@@ -204,8 +252,14 @@ The unit is housed in a custom enclosure constructed from 9mm marine-grade plywo
       "dry" and "water alert" states
 - [x] HTU21D header pins (VIN, GND, DA, CL) soldered
 - [x] SIM800L coiled antenna soldered to the NET pad
-- [x] Enclosure fabrication: 9mm plywood panels cut, side rails installed, and two-tier divider dry-fitted[cite: 3]
+- [x] Enclosure fabrication: 9mm plywood panels cut, side rails installed, and two-tier divider dry-fitted
+- [x] Removable component tray built: mounting holes drilled and dry-fitted
+- [x] TP4056 -> XL6009 -> LM2596 power chain soldered onto the tray
+- [x] ESP32 glued onto the tray alongside the power chain
 - [ ] HTU21D not yet reading correctly — see Known Issues
+- [ ] SIM800L module not yet soldered onto the tray
+- [ ] Bilge float switch and HTU21D final wiring through their respective
+      enclosure pass-throughs not yet done
 - [ ] SIM800L AT command / data transmission firmware — not started
 - [ ] Final component purchases (battery, holder, resistors, jumper wires, SIM card)
 - [ ] DC-DC converter voltage calibration with multimeter
