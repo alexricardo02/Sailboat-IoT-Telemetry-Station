@@ -1,5 +1,12 @@
 # Sailboat IoT Telemetry Station
 
+![C++](https://img.shields.io/badge/C%2B%2B-00599C?style=for-the-badge&logo=c%2B%2B&logoColor=white)
+![Arduino](https://img.shields.io/badge/Arduino-00979D?style=for-the-badge&logo=arduino&logoColor=white)
+![ESP32](https://img.shields.io/badge/ESP32-E7352C?style=for-the-badge&logo=espressif&logoColor=white)
+![2G / GPRS](https://img.shields.io/badge/Cellular-2G%20%2F%20GPRS-FF6F00?style=for-the-badge)
+![I2C](https://img.shields.io/badge/Bus-I2C-3776AB?style=for-the-badge)
+![IoT Telemetry](https://img.shields.io/badge/IoT-Telemetry-4CAF50?style=for-the-badge)
+
 Autonomous, battery-powered telemetry unit for a sailboat. It monitors ambient
 temperature, humidity, and bilge water level, and reports the readings over a
 2G/GPRS cellular connection three times a day. The system is designed to run
