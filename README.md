@@ -10,7 +10,7 @@
 Autonomous, battery-powered telemetry unit for a sailboat. It monitors ambient
 temperature, humidity, and bilge water level, and reports the readings over a
 2G/GPRS cellular connection three times a day. The system is designed to run
-for weeks on a single 18650 Li-ion cell by spending nearly all of its time in
+for months on two 18650 Li-ion cells (in parallel) by spending nearly all of its time in
 deep sleep, waking on a timer or immediately on a bilge water alert.
 
 <img src="images/build-overview.jpeg" width="550" alt="Sailboat IoT Telemetry Station Overview">
@@ -46,7 +46,7 @@ deep sleep, waking on a timer or immediately on a bilge water alert.
   immediate wake-up on flooding, independent of the sleep timer
 - Cellular data reporting (2G/GPRS) three times a day, minimizing radio-on time
 - Deep sleep power management: dual wake source (timer + external interrupt)
-- Fully self-powered: single 18650 Li-ion cell, no connection to the boat's
+- Fully self-powered: two 18650 Li-ion cells (in parallel), no connection to the boat's
   electrical system
 - Designed for a marine environment: sealed/vented enclosure, waterproof cable
   entries, corrosion-aware sensor placement
@@ -64,7 +64,7 @@ deep sleep, waking on a timer or immediately on a bilge water alert.
 | TP4056 | Li-ion charging module | *add link* | <img src="images/Tp4056.webp" width="100" alt="TP4056"> |
 | XL6009 | Adjustable DC-DC step-up (boost) | *add link* | <img src="images/StepUp.webp" width="100" alt="XL6009"> |
 | LM2596 | Adjustable DC-DC step-down (buck) | *add link* | <img src="images/Step-down.webp" width="100" alt="LM2596"> |
-| 18650 Li-ion cell | Main power source | *add link* | <img src="images/18650.png" width="100" alt="18650"> |
+| 2x 18650 Li-ion cells (parallel) | Main power source | *add link* | <img src="images/18650.png" width="100" alt="18650"> |
 | 1000µF 25V electrolytic capacitor | Absorbs SIM800L current spikes | *add link* | <img src="images/Capacitor.webp" width="100" alt="Capacitor"> |
 | 10kΩ / 20kΩ resistors | UART voltage divider + pull-up | *add link* | <img src="images/10k.webp" width="100" alt="10K"> |
 
@@ -98,26 +98,27 @@ used in automatic bilge pumps), with no exposed electronics in contact with
 water, and no corrosion-prone traces like the cheap resistive water sensor
 boards common in hobbyist kits.
 
-**Boost (XL6009) + buck (LM2596) chain over a single regulator.** A single
-18650 cell (3.0-4.2V) cannot directly supply a stable 4.0V for the SIM800L
-across its full discharge range, and the LM2596 buck regulator requires at
-least ~1.5V of headroom between input and output to regulate correctly. The
-chain steps the battery voltage up to a fixed ~6.0V first (XL6009), then down
-to a clean 4.0V for the SIM800L (LM2596) — giving comfortable headroom at
-every stage regardless of the battery's charge state.
+**Boost (XL6009) + buck (LM2596) chain over a single regulator.** A 1S Li-ion
+battery supply (3.0-4.2V from two parallel cells) cannot directly supply a
+stable 4.0V for the SIM800L across its full discharge range, and the LM2596 buck
+regulator requires at least ~1.5V of headroom between input and output to
+regulate correctly. The chain steps the battery voltage up to a fixed ~6.0V first
+(XL6009), then down to a clean 4.0V for the SIM800L (LM2596) — giving comfortable
+headroom at every stage regardless of the battery's charge state.
 
-**Single 18650 cell over 2 cells in series.** Two cells in series would
-require a balancing BMS to charge safely, which the simple TP4056 charger
-does not provide. A single cell keeps the charging circuit simple (plain
-TP4056) while still providing an estimated 1-2 months of autonomy given the
-system's mostly-sleeping duty cycle.
+**Two parallel 18650 cells (1S2P) over cells in series.** Two cells in series
+(2S) would require a balancing BMS to charge safely, which the simple TP4056
+charger does not provide. Wiring two 18650 cells in parallel doubles the battery
+capacity while staying at a nominal 3.7V (1S configuration, 3.0-4.2V range), keeping
+the charging circuit simple (plain TP4056) and extending autonomy to several
+months given the system's mostly-sleeping duty cycle.
 
 ---
 
 ## Power Architecture
 
 ```
-18650 Li-ion cell (3.0V - 4.2V)
+2x 18650 Li-ion cells in parallel (1S2P, 3.0V - 4.2V)
         |
         v
    TP4056 (charge/protection, B+/B-)
@@ -279,7 +280,7 @@ Not yet implemented in firmware:
 - [ ] SIM800L module not yet soldered onto the tray
 - [ ] Bilge float switch final wiring through front panel cable gland not yet done
 - [ ] SIM800L AT command / data transmission firmware — not started
-- [ ] Final component purchases (battery, holder, resistors, jumper wires, SIM card)
+- [ ] Final component purchases (2x 18650 batteries, dual cell holder, resistors, jumper wires, SIM card)
 - [ ] DC-DC converter voltage calibration with multimeter
 - [ ] Full system integration test
 
