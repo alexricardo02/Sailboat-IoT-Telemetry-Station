@@ -35,6 +35,7 @@ deep sleep, waking on a timer or immediately on a bilge water alert.
 8. [Firmware](#firmware)
 9. [Development Environment Setup](#development-environment-setup)
 10. [Progress Log](#progress-log)
+11. [Acknowledgments](#acknowledgments)
 
 ---
 
@@ -283,3 +284,9 @@ Not yet implemented in firmware:
 - [ ] Full system integration test
 
 See [`/logs`](logs) for raw serial monitor captures from bench testing.
+
+---
+
+## Acknowledgments
+
+Special thanks and honorable mention to my father, who provided invaluable guidance, practical tips, and hands-on help building the custom marine-grade plywood enclosure and mechanical housing for this project.
