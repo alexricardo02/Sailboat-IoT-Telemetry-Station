@@ -11,7 +11,8 @@ Autonomous, battery-powered telemetry unit for a sailboat. It monitors ambient
 temperature, humidity, and bilge water level, and reports the readings over a
 2G/GPRS cellular connection three times a day. The system is designed to run
 for months on two 18650 Li-ion cells (in parallel) by spending nearly all of its time in
-deep sleep, waking on a timer or immediately on a bilge water alert.
+deep sleep, waking on a timer or immediately on a bilge water alert. Sensor telemetry
+and alerts are displayed in the companion [Sailboat Telemetry App](https://github.com/alexricardo02/SailboatTelemetryApp).
 
 <img src="images/build-overview.jpeg" width="550" alt="Sailboat IoT Telemetry Station Overview">
 
@@ -33,9 +34,10 @@ deep sleep, waking on a timer or immediately on a bilge water alert.
    - [Fabrication & Internal Tier Layout](#fabrication--internal-tier-layout)
 7. [Assembly Progress](#assembly-progress)
 8. [Firmware](#firmware)
-9. [Development Environment Setup](#development-environment-setup)
-10. [Progress Log](#progress-log)
-11. [Acknowledgments](#acknowledgments)
+9. [Companion Application](#companion-application)
+10. [Development Environment Setup](#development-environment-setup)
+11. [Progress Log](#progress-log)
+12. [Acknowledgments](#acknowledgments)
 
 ---
 
@@ -239,6 +241,14 @@ Not yet implemented in firmware:
 - Cellular data transmission / payload formatting
 - Production sleep interval (currently 30 seconds for bench testing, will be
   changed to match the 3x/day schedule)
+
+---
+
+## Companion Application
+
+The user-facing dashboard and application where incoming telemetry data (temperature, humidity, battery status, and bilge flood alerts) will be received, stored, and displayed is hosted in a dedicated repository:
+
+👉 **[alexricardo02/SailboatTelemetryApp](https://github.com/alexricardo02/SailboatTelemetryApp)**
 
 ---
 
