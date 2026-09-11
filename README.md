@@ -6,7 +6,8 @@ temperature, humidity, and bilge water level, and reports the readings over a
 for weeks on a single 18650 Li-ion cell by spending nearly all of its time in
 deep sleep, waking on a timer or immediately on a bilge water alert.
 
-![Build photo placeholder](/images/build-overview.jpeg)
+<img src="images/build-overview.jpeg" width="550" alt="Sailboat IoT Telemetry Station Overview">
+
 
 ---
 
@@ -169,37 +170,43 @@ The unit is housed in a custom enclosure constructed from 9mm marine-grade plywo
 
 ### Cutting Plan & Panel Specifications
 
-![Enclosure Cutting Plan](/images/enclosure-blueprint.png)
+<img src="images/enclosure-blueprint.png" width="550" alt="Enclosure Cutting Plan">
+
 *Panel cutting dimensions, screw patterns, and pass-through positions for 9mm plywood.*
 
 ### Fabrication & Internal Tier Layout
 
 | Lower Tier: Battery Bay | Upper Tier: Electronics Tray |
 | :---: | :---: |
-| ![Lower Tier](/images/box-tier-batteries.jpeg) | ![Upper Tier](/images/box-tier-electronics.jpeg) |
+| ![Lower Tier](images/box-tier-batteries.jpeg) | ![Upper Tier](images/box-tier-electronics.jpeg) |
 | *Battery compartment under the divider plate.* | *Removable tray mounting the ESP32 and power circuitry.* |
 
 ---
 
 ## Assembly Progress
 
-Step-by-step build of the removable component tray:
+Step-by-step build of the component tray and enclosure:
 
 | 1. Tray layout & mounting holes | 2. Power chain wired | 3. ESP32 mounted |
 | :---: | :---: | :---: |
-| ![Tray layout with drilled mounting holes](/images/tray-layout-holes.jpg) | ![TP4056 to XL6009 to LM2596 power chain soldered](/images/power-chain-wiring.jpg) | ![ESP32 glued onto the tray next to the power chain](/images/tray-with-esp32.jpg) |
+| ![Tray layout with drilled mounting holes](images/tray-layout-holes.jpg) | ![TP4056 to XL6009 to LM2596 power chain soldered](images/power-chain-wiring.jpg) | ![ESP32 glued onto the tray next to the power chain](images/tray-with-esp32.jpg) |
 | *Mounting holes drilled and modules dry-fitted before gluing.* | *TP4056 charger wired into the XL6009 boost converter, which feeds the LM2596 buck converter above it.* | *ESP32 glued onto the tray alongside the completed charge/boost/buck chain.* |
+| **4. Lid header slots cut** | **5. External sensor wired** | |
+| ![ESP32 header slots cut into the enclosure lid](images/esp32-holes.jpg) | ![HTU21D sensor mounted on lid and wired to ESP32 headers](images/imu-installation.jpg) | |
+| *Dual parallel slots cut through the enclosure lid directly aligning with the ESP32 pin headers to allow jumper wire routing.* | *HTU21D temperature & humidity sensor fixed to the exterior lid and wired via 4-conductor I2C jumper (3V3, GND, SDA, SCL).* | |
 
-Soldered and glued onto the tray so far:
+**Mounted and wired so far:**
 - TP4056 charging module
 - XL6009 step-up (boost) converter
 - LM2596 step-down (buck) converter
 - ESP32 NodeMCU-32S
+- Enclosure lid with ESP32 header pass-through slots
+- HTU21D sensor mounted externally on the lid and wired to ESP32 header pins
 
-Still to be soldered onto the tray: SIM800L module, HTU21D sensor wiring
-(routed out through the lid slot), bilge float switch wiring (routed out
-through the front panel cable gland), 1000µF capacitor at the SIM800L power
-pins, and the UART voltage divider resistors.
+**Still to be completed:**
+- SIM800L module placement and soldering (+ 1000µF buffer capacitor and UART voltage divider resistors)
+- Bilge float switch wiring routed and sealed through the front panel IP68 cable gland
+- Battery tray leads connection to TP4056 B+/B- inputs
 
 ---
 
@@ -256,10 +263,11 @@ Not yet implemented in firmware:
 - [x] Removable component tray built: mounting holes drilled and dry-fitted
 - [x] TP4056 -> XL6009 -> LM2596 power chain soldered onto the tray
 - [x] ESP32 glued onto the tray alongside the power chain
+- [x] Enclosure lid pass-through slots cut for ESP32 header access
+- [x] HTU21D sensor mounted to lid exterior and wired to ESP32 headers
 - [ ] HTU21D not yet reading correctly — see Known Issues
 - [ ] SIM800L module not yet soldered onto the tray
-- [ ] Bilge float switch and HTU21D final wiring through their respective
-      enclosure pass-throughs not yet done
+- [ ] Bilge float switch final wiring through front panel cable gland not yet done
 - [ ] SIM800L AT command / data transmission firmware — not started
 - [ ] Final component purchases (battery, holder, resistors, jumper wires, SIM card)
 - [ ] DC-DC converter voltage calibration with multimeter
