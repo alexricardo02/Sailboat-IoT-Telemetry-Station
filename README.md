@@ -25,14 +25,16 @@ deep sleep, waking on a timer or immediately on a bilge water alert.
 3. [Component Selection Rationale](#component-selection-rationale)
 4. [Power Architecture](#power-architecture)
 5. [Pin Mapping](#pin-mapping)
+   - [HTU21D (I2C)](#htu21d-i2c)
+   - [Bilge float switch (dry contact)](#bilge-float-switch-dry-contact)
+   - [SIM800L (UART2)](#sim800l-uart2)
 6. [Enclosure & Mechanical Design](#enclosure--mechanical-design)
+   - [Cutting Plan & Panel Specifications](#cutting-plan--panel-specifications)
+   - [Fabrication & Internal Tier Layout](#fabrication--internal-tier-layout)
 7. [Assembly Progress](#assembly-progress)
 8. [Firmware](#firmware)
 9. [Development Environment Setup](#development-environment-setup)
 10. [Progress Log](#progress-log)
-11. [Known Issues](#known-issues)
-12. [Roadmap](#roadmap)
-13. [License](#license)
 
 ---
 
