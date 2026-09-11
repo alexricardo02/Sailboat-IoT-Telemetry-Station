@@ -289,4 +289,4 @@ See [`/logs`](logs) for raw serial monitor captures from bench testing.
 
 ## Acknowledgments
 
-Special thanks and honorable mention to my father, who provided invaluable guidance, practical tips, and hands-on help building the custom marine-grade plywood enclosure and mechanical housing for this project.
+Special thanks and honorable mention to my dad, who provided invaluable guidance, practical tips, and hands-on help building the custom marine-grade plywood enclosure and mechanical housing for this project.
