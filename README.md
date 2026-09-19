@@ -204,9 +204,9 @@ Step-by-step build of the component tray and enclosure:
 | :---: | :---: | :---: |
 | ![Tray layout with drilled mounting holes](images/tray-layout-holes.jpg) | ![TP4056 to XL6009 to LM2596 power chain soldered](images/power-chain-wiring.jpg) | ![ESP32 glued onto the tray next to the power chain](images/tray-with-esp32.jpg) |
 | *Mounting holes drilled and modules dry-fitted before gluing.* | *TP4056 charger wired into the XL6009 boost converter, which feeds the LM2596 buck converter above it.* | *ESP32 glued onto the tray alongside the completed charge/boost/buck chain.* |
-| **4. Lid header slots cut** | **5. External sensor wired** | |
-| ![ESP32 header slots cut into the enclosure lid](images/esp32-holes.jpg) | ![HTU21D sensor mounted on lid and wired to ESP32 headers](images/imu-installation.jpg) | |
-| *Dual parallel slots cut through the enclosure lid directly aligning with the ESP32 pin headers to allow jumper wire routing.* | *HTU21D temperature & humidity sensor fixed to the exterior lid and wired via 4-conductor I2C jumper (3V3, GND, SDA, SCL).* | |
+| **4. Lid header slots cut** | **5. External sensor wired** | **6. SIM800L wired & tray complete** |
+| ![ESP32 header slots cut into the enclosure lid](images/esp32-holes.jpg) | ![HTU21D sensor mounted on lid and wired to ESP32 headers](images/imu-installation.jpg) | ![SIM800L module wired and soldered onto the component tray with antenna and SIM card installed](images/tray-full-assembly.jpg) |
+| *Dual parallel slots cut through the enclosure lid directly aligning with the ESP32 pin headers to allow jumper wire routing.* | *HTU21D temperature & humidity sensor fixed to the exterior lid and wired via 4-conductor I2C jumper (3V3, GND, SDA, SCL).* | *SIM800L soldered and wired to LM2596 output (4.0V), ESP32 UART2 (via voltage divider), and helical antenna; Personal SIM card inserted and credited.* |
 
 **Mounted and wired so far:**
 - TP4056 charging module
@@ -215,9 +215,10 @@ Step-by-step build of the component tray and enclosure:
 - ESP32 NodeMCU-32S
 - Enclosure lid with ESP32 header pass-through slots
 - HTU21D sensor mounted externally on the lid and wired to ESP32 header pins
+- SIM800L module soldered and wired (including UART voltage divider and 1000µF buffer capacitor)
+- Personal SIM card inserted and credited for connectivity testing
 
 **Still to be completed:**
-- SIM800L module placement and soldering (+ 1000µF buffer capacitor and UART voltage divider resistors)
 - Bilge float switch wiring routed and sealed through the front panel IP68 cable gland
 - Battery tray leads connection to TP4056 B+/B- inputs
 
@@ -235,6 +236,8 @@ What it currently does:
 
 Libraries used:
 - [Adafruit HTU21DF Library](https://github.com/adafruit/Adafruit_HTU21DF_Library)
+
+> **Note:** The SIM800L hardware and power supply are fully wired and ready for AT command bench testing, though cellular functionality is not yet implemented in the firmware.
 
 Not yet implemented in firmware:
 - SIM800L AT command handling
@@ -286,11 +289,12 @@ The user-facing dashboard and application where incoming telemetry data (tempera
 - [x] ESP32 glued onto the tray alongside the power chain
 - [x] Enclosure lid pass-through slots cut for ESP32 header access
 - [x] HTU21D sensor mounted to lid exterior and wired to ESP32 headers
+- [x] SIM800L module soldered onto the tray and wired to power chain (LM2596) and ESP32 UART2 (with voltage divider)
+- [x] Personal SIM card inserted and credited, ready for connectivity testing
 - [ ] HTU21D not yet reading correctly — see Known Issues
-- [ ] SIM800L module not yet soldered onto the tray
 - [ ] Bilge float switch final wiring through front panel cable gland not yet done
 - [ ] SIM800L AT command / data transmission firmware — not started
-- [ ] Final component purchases (2x 18650 batteries, dual cell holder, resistors, jumper wires, SIM card)
+- [ ] Final component purchases (2x 18650 batteries, dual cell holder, resistors, jumper wires)
 - [ ] DC-DC converter voltage calibration with multimeter
 - [ ] Full system integration test
 
