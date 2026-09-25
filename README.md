@@ -119,25 +119,7 @@ months given the system's mostly-sleeping duty cycle.
 
 ## Power Architecture
 
-```
-2x 18650 Li-ion cells in parallel (1S2P, 3.0V - 4.2V)
-        |
-        v
-   TP4056 (charge/protection, B+/B-)
-        |
-        v (OUT+/OUT-)
-   XL6009 step-up  --> trimmed to a fixed 6.0V
-        |
-        +---------------------------+
-        |                           |
-        v                           v
-  ESP32 VIN (6.0V,               LM2596 step-down --> trimmed to 4.0V
-  internal AMS1117                    |
-  regulates to 3.3V)                  v
-                              SIM800L VCC/GND
-                              (+ 1000uF cap in parallel
-                               at the module's pins)
-```
+<img src="images/power-scheme.png" width="550" alt="Enclosure Cutting Plan">
 
 All modules share a common ground.
 
@@ -166,6 +148,9 @@ All modules share a common ground.
 | GND | LM2596 GND + capacitor negative lead + common ground |
 | TXD | ESP32 GPIO 16 (RX2) — direct connection |
 | RXD | ESP32 GPIO 17 (TX2) through a voltage divider (10kΩ series + 20kΩ to GND) to bring 3.3V logic down to ~2.2V |
+
+
+<img src="images/connections-scheme.png" width="550" alt="Enclosure Cutting Plan">
 
 ---
 
