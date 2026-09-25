@@ -158,7 +158,7 @@ All modules share a common ground.
 
 The unit is housed in a custom enclosure constructed from 9mm marine-grade plywood (150 mm × 100 mm × 60 mm external dimensions). To maximize moisture protection, avoid component crowding, and keep the electronics serviceable without disturbing the wiring, the enclosure is built around a **removable component tray**:
 
-- **Removable Tray (Component Card):** A single rectangular board that slides into a slot running through the middle of the box. Every module — TP4056 charger, XL6009 boost, LM2596 buck, and the ESP32 — is glued directly to this tray in a fixed layout, with all inter-module wiring soldered on the tray itself. Because the whole assembly is on one card, the entire electronics stack can be slid out of the box as a single unit for inspection or repair, without unsoldering anything from the box itself.
+- **Removable Tray (Component Card):** A single rectangular board that slides into a slot running through the middle of the box. Every module — TP4056 charger, XL6009 boost, LM2596 buck, SIM800L, and the ESP32 — is glued directly to this tray in a fixed layout, with all inter-module wiring soldered on the tray itself. Because the whole assembly is on one card, the entire electronics stack can be slid out of the box as a single unit for inspection or repair, without unsoldering anything from the box itself.
 - **Sealing & Pass-throughs:**
   - **Front Panel:** Ø12.5 mm hole fitted with an IP68 cable gland for the bilge float switch cable.
   - **Back Panel:** Ø12.5 mm hole (plugged/reserved for auxiliary external sensors).
@@ -189,20 +189,21 @@ Step-by-step build of the component tray and enclosure:
 | :---: | :---: | :---: |
 | ![Tray layout with drilled mounting holes](images/tray-layout-holes.jpg) | ![TP4056 to XL6009 to LM2596 power chain soldered](images/power-chain-wiring.jpg) | ![ESP32 glued onto the tray next to the power chain](images/tray-with-esp32.jpg) |
 | *Mounting holes drilled and modules dry-fitted before gluing.* | *TP4056 charger wired into the XL6009 boost converter, which feeds the LM2596 buck converter above it.* | *ESP32 glued onto the tray alongside the completed charge/boost/buck chain.* |
-| **4. Lid header slots cut** | **5. External sensor wired** | |
-| ![ESP32 header slots cut into the enclosure lid](images/esp32-holes.jpg) | ![HTU21D sensor mounted on lid and wired to ESP32 headers](images/imu-installation.jpg) | |
-| *Dual parallel slots cut through the enclosure lid directly aligning with the ESP32 pin headers to allow jumper wire routing.* | *HTU21D temperature & humidity sensor fixed to the exterior lid and wired via 4-conductor I2C jumper (3V3, GND, SDA, SCL).* | |
+| **4. Lid header slots cut** | **5. External sensor wired** | **6. Final tray wiring complete** |
+| ![ESP32 header slots cut into the enclosure lid](images/esp32-holes.jpg) | ![HTU21D sensor mounted on lid and wired to ESP32 headers](images/imu-installation.jpg) | ![Completed component tray wiring with SIM800L and ESP32](images/final-wired.jpg) |
+| *Dual parallel slots cut through the enclosure lid directly aligning with the ESP32 pin headers to allow jumper wire routing.* | *HTU21D temperature & humidity sensor fixed to the exterior lid and wired via 4-conductor I2C jumper (3V3, GND, SDA, SCL).* | *SIM800L module mounted with buffer capacitor and UART voltage divider; all power lines and serial connections between modules fully wired.* |
 
 **Mounted and wired so far:**
 - TP4056 charging module
 - XL6009 step-up (boost) converter
 - LM2596 step-down (buck) converter
 - ESP32 NodeMCU-32S
+- SIM800L cellular module (with 1000µF buffer capacitor and UART voltage divider resistors)
+- Inter-module power and UART wiring on the component tray
 - Enclosure lid with ESP32 header pass-through slots
 - HTU21D sensor mounted externally on the lid and wired to ESP32 header pins
 
 **Still to be completed:**
-- SIM800L module placement and soldering (+ 1000µF buffer capacitor and UART voltage divider resistors)
 - Bilge float switch wiring routed and sealed through the front panel IP68 cable gland
 - Battery tray leads connection to TP4056 B+/B- inputs
 
@@ -272,10 +273,10 @@ The user-facing dashboard and application where incoming telemetry data (tempera
 - [x] Enclosure lid pass-through slots cut for ESP32 header access
 - [x] HTU21D sensor mounted to lid exterior and wired to ESP32 headers
 - [ ] HTU21D not yet reading correctly — see Known Issues
-- [ ] SIM800L module not yet soldered onto the tray
+- [x] SIM800L module, buffer capacitor, and UART voltage divider soldered and wired on the tray
 - [ ] Bilge float switch final wiring through front panel cable gland not yet done
 - [ ] SIM800L AT command / data transmission firmware — not started
-- [ ] Final component purchases (2x 18650 batteries, dual cell holder, resistors, jumper wires, SIM card)
+- [ ] Final component purchases (2x 18650 batteries, dual cell holder, SIM card)
 - [ ] DC-DC converter voltage calibration with multimeter
 - [ ] Full system integration test
 
