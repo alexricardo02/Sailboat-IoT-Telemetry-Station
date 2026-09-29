@@ -36,9 +36,9 @@ and alerts are displayed in the companion [Sailboat Telemetry App](https://githu
 8. [Firmware](#firmware)
 9. [Companion Application](#companion-application)
 10. [Development Environment Setup](#development-environment-setup)
-11. [Progress Log](#progress-log)
-12. [Acknowledgments](#acknowledgments)
-
+11. [Known Issues & Troubleshooting](#known-issues--troubleshooting)
+12. [Progress Log](#progress-log)
+13. [Acknowledgments](#acknowledgments)
 ---
 
 ## Features
@@ -268,6 +268,27 @@ The user-facing dashboard and application where incoming telemetry data (tempera
 3. **Adafruit HTU21DF library** — install via
    *Sketch > Include Library > Manage Libraries* inside the Arduino IDE,
    search "Adafruit HTU21DF".
+
+---
+
+## Known Issues & Troubleshooting
+
+### Issue 1: High Impedance / Open Circuit on UART Level-Shifter Node (SIM800L RXD)
+
+* **Stage:** Pre-power-up static circuit validation (multimeter continuity and resistance checks).
+* **Observed Behavior:** 
+  When testing the UART2 logic-level divider between the ESP32 `TX2` (GPIO 17) pin and the SIM800L `RXD` pin, an auto-ranging digital multimeter (Fluke 114) registered an open-circuit reading in the mega-ohm range (~1.7 MΩ) instead of the nominal 10 kΩ series resistance[cite: 10]. Measuring the complete divider path from GPIO 17 to `GND` similarly failed to report the expected ~30 kΩ (10 kΩ + 20 kΩ series-parallel equivalent)[cite: 8, 9].
+* **Root Cause Analysis:**
+  A systematic point-to-point probing isolation confirmed:
+  1. The 10 kΩ resistor body measured 9.8 kΩ across its leads, confirming the component was intact and within its 5% tolerance[cite: 9].
+  2. The 20 kΩ pull-down resistor to `GND` read nominally at ~20 kΩ[cite: 8].
+  3. The trace from ESP32 GPIO 17 to the input lead of the 10 kΩ resistor showed solid continuity (0.0 Ω).
+  4. The open circuit was localized to the mechanical solder junction connecting the 10 kΩ resistor's output lead to the SIM800L `RXD` pin header node[cite: 8, 9]. Non-conductive rosin flux had coated the wire joint during initial soldering, forming an insulating barrier (cold joint) that allowed mechanical adherence without metallic electrical contact. The ~1.7 MΩ reading was caused by the auto-ranging meter measuring high-impedance surface flux and ambient stray paths[cite: 10].
+* **Corrective Action & Resolution:**
+  The solder joint at the SIM800L `RXD` node was cleaned, fluxed, and reflowed with fresh eutectic solder to guarantee a true molecular bond. Re-testing confirmed:
+  - 0.0 Ω continuity across the junction.
+  - Exactly ~9.8 kΩ from ESP32 GPIO 17 to SIM800L `RXD`.
+  - Exactly ~30 kΩ total branch resistance from GPIO 17 to `GND`, ensuring the 3.3V logic level from the ESP32 is properly scaled down to ~2.2V before entering the SIM800L.
 
 ---
 
